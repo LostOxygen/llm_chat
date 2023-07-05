@@ -7,19 +7,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NbThemeModule, NbLayoutModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AppRoutingModule } from './app-routing.module';
+import { UserComponent } from './user/user.component';
+import { ChatComponent } from './chat/chat.component';
+
+import { NbChatModule } from '@nebular/theme';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    UserComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    NbThemeModule.forRoot({ name: 'dark' }),
+    NbThemeModule.forRoot({ name: 'default' }),
     NbLayoutModule,
     NbEvaIconsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NbChatModule
   ],
   providers: [],
   bootstrap: [AppComponent]

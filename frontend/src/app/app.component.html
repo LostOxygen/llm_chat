@@ -1,19 +1,15 @@
 <nb-layout>
 
-  <nb-layout-header fixed>
-  <!-- Insert header here -->
+  <nb-layout-header>
+    LLM Chat App coolio
   </nb-layout-header>
 
-  <nb-layout-column>
-    <router-outlet>
-
-      
-    </router-outlet>
-    
+  <nb-layout-column class="user-container">
+    <app-user>
+    </app-user>
   </nb-layout-column>
-
-  <nb-layout-footer fixed>
-  <!-- Insert footer here -->
-  </nb-layout-footer>
-
+  <nb-layout-column>
+    <app-chat>
+    </app-chat>
+  </nb-layout-column>
 </nb-layout>
