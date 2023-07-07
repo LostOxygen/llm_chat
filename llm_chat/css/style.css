@@ -1,0 +1,49 @@
+Header {
+    height: 1;
+    dock: top;
+}
+
+Footer {
+    height: 1;
+    dock: bottom;
+}
+
+Screen {
+    layout: grid;
+    grid-size: 2;
+    grid-columns: 1fr 4fr;
+}
+
+ChatColumn {
+    height: 100%;
+    margin: 0 0 0 0;
+    border: solid gray;
+}
+
+UserColumn {
+    height: 100%;
+    border: solid gray;
+}
+
+ChatMessage {
+    height: auto;
+    width: 1fr;
+    margin: 1 1;
+    border: gray;
+    border-title-align: left;
+    border-subtitle-align: center;
+}
+
+UserLabel {
+    height: auto;
+    width: 1fr;
+    margin: 1 1;
+    color: white;
+    content-align: center middle;
+    border: tall gray;
+}
+
+.chat_header {
+    border: solid gray;
+    background: white;
+}
