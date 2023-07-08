@@ -1,5 +1,7 @@
 """library for chat visualization functions and classes"""
 import socket
+from time import sleep
+import asyncio
 from typing import Final, List
 import textwrap
 
@@ -27,17 +29,28 @@ class ChatVisualizer(App):
         # socket stuff
         self.host = host
         self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.handle_socket()
+        self.running = False
+        #asyncio.get_event_loop().run_until_complete(self.start_server())
 
-    async def handle_socket(self) -> None:
-        """handle the socket connection"""
+
+    def start_server(self) -> None:
+        """start the socket server with textual worker"""
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.running = True
+        self.push_message("system", "server started", "now")
+        asyncio.create_task(self.get_messages())
+
+
+    async def get_messages(self) -> None:
+        """get messages from the socket"""
+        sleep(1)
         self.sock.bind((self.host, self.port))
         self.sock.listen()
-        conn, _ = await self.sock.accept()
+        conn, _ = self.sock.accept()
 
         with conn:
             while True:
+                sleep(0.1)
                 data = conn.recv(1024)
                 if not data:
                     break
@@ -57,6 +70,8 @@ class ChatVisualizer(App):
         yield UserColumn(id="user_container")
         yield ChatColumn(id="chat_container")
         yield Footer()
+        if not self.running:
+            self.start_server()
 
 
     def push_message(self, user: str, message: str, timestamp: str) -> None:

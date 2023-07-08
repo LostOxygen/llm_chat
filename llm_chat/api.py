@@ -16,3 +16,9 @@ class ChatAPI:
         timestamp = datetime.now().strftime("%d. %B %Y %I:%M%p")
         final_msg = f"MSG:{user}:{message}:{timestamp}"
         self.sock.sendall(final_msg.encode("utf-8"))
+
+
+    def close_connection(self):
+        """close the socket connection"""
+        self.sock.sendall("EXT".encode("utf-8"))
+        self.sock.close()
