@@ -1,6 +1,7 @@
 """library for chat visualization functions and classes"""
 from typing import Final, List
 import textwrap
+import os
 
 from textual.timer import Timer
 from textual.app import App, ComposeResult
@@ -28,6 +29,10 @@ class ChatVisualizer(App):
         self.chat_msgs: List[ChatMessage] = []
         self.users: dict[str, str] = {}
         self.curr_chat_len: int = 0
+        # check if the paths are valid
+        if not os.path.exists(PATH):
+            os.makedirs(PATH)
+        os.remove(PATH+"chat_log.txt")
 
 
     def action_toggle_dark(self) -> None:
