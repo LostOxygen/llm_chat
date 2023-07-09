@@ -1,16 +1,16 @@
 """library for chat visualization functions and classes"""
-import socket
-from time import sleep
-import asyncio
 from typing import Final, List
 import textwrap
 
+from textual.timer import Timer
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.widgets import Header, Footer
 
 from llm_chat.widgets import ChatMessage, UserColumn, ChatColumn, UserLabel
 from llm_chat.utils import COLOR_LIST
+
+PATH: Final[str] = "/tmp/llm_chat/"
 
 
 class ChatVisualizer(App):
@@ -20,43 +20,14 @@ class ChatVisualizer(App):
         Binding(key="d", action="toggle_dark", description="Toggle Light/Dark Mode"),
         Binding(key="q", action="quit", description="Quit"),
     ]
+    data_timer: Timer
 
-    def __init__(self, host: str = "127.0.0.1", port: int = 1337):
+    def __init__(self):
         """initialize the chat visualizer class"""
         super().__init__()
         self.chat_msgs: List[ChatMessage] = []
         self.users: dict[str, str] = {}
-        # socket stuff
-        self.host = host
-        self.port = port
-        self.running = False
-        #asyncio.get_event_loop().run_until_complete(self.start_server())
-
-
-    def start_server(self) -> None:
-        """start the socket server with textual worker"""
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.running = True
-        self.push_message("system", "server started", "now")
-        asyncio.create_task(self.get_messages())
-
-
-    async def get_messages(self) -> None:
-        """get messages from the socket"""
-        sleep(1)
-        self.sock.bind((self.host, self.port))
-        self.sock.listen()
-        conn, _ = self.sock.accept()
-
-        with conn:
-            while True:
-                sleep(0.1)
-                data = conn.recv(1024)
-                if not data:
-                    break
-                data = data.decode("utf-8")
-                data = data.split(":")
-                self.push_message(data[1], data[2], data[3])
+        self.curr_chat_len: int = 0
 
 
     def action_toggle_dark(self) -> None:
@@ -70,8 +41,6 @@ class ChatVisualizer(App):
         yield UserColumn(id="user_container")
         yield ChatColumn(id="chat_container")
         yield Footer()
-        if not self.running:
-            self.start_server()
 
 
     def push_message(self, user: str, message: str, timestamp: str) -> None:
@@ -106,3 +75,28 @@ class ChatVisualizer(App):
         user_label.styles.background = self.users[user]
 
         self.query_one("#user_container").mount(user_label)
+
+
+    async def on_mount(self) -> None:
+        """on button event handler"""
+        self.data_timer = self.set_interval(1, self.retreive_msgs, repeat=0)
+
+
+    def retreive_msgs(self) -> None:
+        """load messages from"""
+        with open(PATH+"chat_log.txt", "r", encoding="utf-8") as chat_file:
+            try:
+                chat = chat_file.read()
+                if len(chat) == 0:
+                    return
+
+                curr_line_counter: int = 0
+                for line in chat.split("\n"):
+                    print(line)
+                    curr_line_counter += 1
+                    if self.curr_chat_len < curr_line_counter and line != "":
+                        self.curr_chat_len += 1
+                        msg = line.split(":")
+                        self.push_message(msg[1], msg[2], msg[3]+msg[4])
+            except EOFError:
+                return

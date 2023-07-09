@@ -1,24 +1,23 @@
 """API class implementation to interact with the ChatVisuzalization class"""
-import socket
 from datetime import datetime
+from typing import Final
+import os
+
+PATH: Final[str] = "/tmp/llm_chat/"
 
 class ChatAPI:
     """socket API class to interact with ChatVisualization class"""
-    def __init__(self, host: str = "127.0.0.1", port: int = 1337):
-        self.host = host
-        self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((self.host, self.port))
+    def __init__(self):
+        # check if the paths are valid
+        if not os.path.exists(PATH):
+            os.makedirs(PATH)
 
 
-    def send_message(self, user: str, message: str):
-        """send data to the socket"""
+    def add_message(self, user: str, message: str):
+        """adds messages to the chat visualization"""
         timestamp = datetime.now().strftime("%d. %B %Y %I:%M%p")
-        final_msg = f"MSG:{user}:{message}:{timestamp}"
-        self.sock.sendall(final_msg.encode("utf-8"))
+        final_msg = f"MSG:{user}:{message}:{timestamp}\n"
+        final_msg.encode("utf-8")
 
-
-    def close_connection(self):
-        """close the socket connection"""
-        self.sock.sendall("EXT".encode("utf-8"))
-        self.sock.close()
+        with open(PATH+"chat_log.txt", "a", encoding="utf-8") as chat_file:
+            chat_file.write(final_msg)
