@@ -32,7 +32,8 @@ class ChatVisualizer(App):
         # check if the paths are valid
         if not os.path.exists(PATH):
             os.makedirs(PATH)
-        os.remove(PATH+"chat_log.txt")
+        if os.path.isfile(PATH+"chat_log.txt"):
+            os.remove(PATH+"chat_log.txt")
 
 
     def action_toggle_dark(self) -> None:
@@ -89,6 +90,9 @@ class ChatVisualizer(App):
 
     def retreive_msgs(self) -> None:
         """load messages from"""
+        if not os.path.isfile(PATH+"chat_log.txt"):
+            return
+
         with open(PATH+"chat_log.txt", "r", encoding="utf-8") as chat_file:
             try:
                 chat = chat_file.read()
