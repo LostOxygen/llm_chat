@@ -18,7 +18,6 @@ class ChatVisualizer(App):
     """class for chat visualization"""
     CSS_PATH: Final[str] = "css/style.css"
     BINDINGS: Final[List[Binding]] = [
-        Binding(key="d", action="toggle_dark", description="Toggle Light/Dark Mode"),
         Binding(key="q", action="quit", description="Quit"),
     ]
     data_timer: Timer
@@ -100,12 +99,12 @@ class ChatVisualizer(App):
                     return
 
                 curr_line_counter: int = 0
-                for line in chat.split("\n"):
+                for line in chat.split("@"):
                     print(line)
                     curr_line_counter += 1
                     if self.curr_chat_len < curr_line_counter and line != "":
                         self.curr_chat_len += 1
-                        msg = line.split(":")
-                        self.push_message(msg[1], msg[2], msg[3]+msg[4])
+                        msg = line.split("|")
+                        self.push_message(msg[1], msg[2], msg[3])
             except EOFError:
                 return
