@@ -12,39 +12,44 @@ Screen {
     layout: grid;
     grid-size: 2;
     grid-columns: 1fr 4fr;
+    background: #4c566a;
 }
 
 ChatColumn {
     height: 100%;
     margin: 0 0 0 0;
-    border: solid gray;
+    border: solid #eceff4;
+    text-style: bold;
 }
 
 UserColumn {
     height: 100%;
-    border: solid gray;
+    border: solid #eceff4;
+    text-style: bold;
 }
 
 ChatMessage {
     height: auto;
     width: 1fr;
     margin: 1 1;
-    border: gray;
+    border: #eceff4;
     border-title-align: left;
     border-title-style: bold;
-    border-title-color: white;
+    border-title-color: #eceff4;
+    color: #2e3440;
 }
 
 UserLabel {
     height: auto;
     width: 1fr;
     margin: 1 1;
-    color: white;
+    color: #eceff4;
     content-align: center middle;
-    border: tall gray;
+    border: #eceff4;
+    text-style: bold;
 }
 
 .chat_header {
     border: solid gray;
-    background: white;
+    background: #eceff4;
 }
