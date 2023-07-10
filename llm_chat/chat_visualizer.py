@@ -84,10 +84,10 @@ class ChatVisualizer(App):
 
     async def on_mount(self) -> None:
         """on button event handler"""
-        self.data_timer = self.set_interval(1, self.retreive_msgs, repeat=0)
+        self.data_timer = self.set_interval(1, self.load_msgs, repeat=0)
 
 
-    def retreive_msgs(self) -> None:
+    def load_msgs(self) -> None:
         """load messages from"""
         if not os.path.isfile(PATH+"chat_log.txt"):
             return
@@ -100,7 +100,6 @@ class ChatVisualizer(App):
 
                 curr_line_counter: int = 0
                 for line in chat.split("@"):
-                    print(line)
                     curr_line_counter += 1
                     if self.curr_chat_len < curr_line_counter and line != "":
                         self.curr_chat_len += 1
