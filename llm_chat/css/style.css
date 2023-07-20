@@ -32,7 +32,7 @@ ChatMessage {
     height: auto;
     width: 1fr;
     margin: 1 1;
-    border: #eceff4;
+    /* border: #eceff4; */
     border-title-align: left;
     border-title-style: bold;
     border-title-color: #eceff4;
@@ -45,7 +45,7 @@ UserLabel {
     margin: 1 1;
     color: #eceff4;
     content-align: center middle;
-    border: #eceff4;
+    /* border: #eceff4; */
     text-style: bold;
 }
 
