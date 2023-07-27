@@ -8,16 +8,35 @@ Footer {
     dock: bottom;
 }
 
+Input {
+    background: #4c566a;
+    color: #eceff4;
+    border: #eceff4;
+    width: 100%;
+    height: 1;
+    min-height: 1;
+}
+
+Input:focus {
+    border: #88c0d0;
+}
+
+Input>.input--cursor {
+    background: #4c566a;
+    color: #eceff4;
+    text-style: reverse;
+}
+
 Screen {
     layout: grid;
     grid-size: 2;
     grid-columns: 1fr 4fr;
+    grid-rows: 7fr 1fr;
     background: #4c566a;
 }
 
 ChatColumn {
     height: 100%;
-    margin: 0 0 0 0;
     border: solid #eceff4;
     text-style: bold;
 }
@@ -26,6 +45,7 @@ UserColumn {
     height: 100%;
     border: solid #eceff4;
     text-style: bold;
+    row-span: 2;
 }
 
 ChatMessage {
@@ -45,8 +65,17 @@ UserLabel {
     margin: 1 1;
     color: #eceff4;
     content-align: center middle;
+    text-align: center;
     /* border: #eceff4; */
     text-style: bold;
+}
+
+.user_chat_label {
+    text-style: bold;
+}
+
+.chat_message_container {
+    height: auto;
 }
 
 .chat_header {

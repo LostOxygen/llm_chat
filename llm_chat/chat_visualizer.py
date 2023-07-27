@@ -2,14 +2,17 @@
 from typing import Final, List
 import textwrap
 import os
+from datetime import datetime
 
 from textual.timer import Timer
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.widgets import Header, Footer
+from textual.widgets import Header, Footer, Input
+from textual.message import Message
 
 from llm_chat.widgets import ChatMessage, UserColumn, ChatColumn, UserLabel
 from llm_chat.utils import COLOR_LIST
+from llm_chat.api import ChatAPI
 
 PATH: Final[str] = "/tmp/llm_chat/"
 
@@ -33,6 +36,8 @@ class ChatVisualizer(App):
             os.makedirs(PATH)
         if os.path.isfile(PATH+"chat_log.txt"):
             os.remove(PATH+"chat_log.txt")
+        if os.path.isfile(PATH+"chat_input_log.txt"):
+            os.remove(PATH+"chat_input_log.txt")
 
 
     def action_toggle_dark(self) -> None:
@@ -45,6 +50,7 @@ class ChatVisualizer(App):
         yield Header()
         yield UserColumn(id="user_container")
         yield ChatColumn(id="chat_container")
+        yield Input(placeholder="Type message.. (Enter to send)", id="input_field")
         yield Footer()
 
 
@@ -66,7 +72,7 @@ class ChatVisualizer(App):
             line = line.lstrip().rstrip()
             print_message += wrapper.fill(text=line)+"\n"
 
-        new_message = ChatMessage(print_message)
+        new_message = ChatMessage(print_message, user, timestamp)
 
         # add user and timestamp to the border title
         new_message.border_title = f"{user} - ({timestamp}):"
@@ -107,3 +113,20 @@ class ChatVisualizer(App):
                         self.push_message(msg[1], msg[2], msg[3])
             except EOFError:
                 return
+
+
+    def on_input_submitted(self, submitted: Message) -> None:
+        """when the enter key is pressed, this event is triggered"""
+        self.add_input_message(str(submitted.value))
+        self.query_one(Input).value=""
+
+
+    def add_input_message(self, message: str) -> None:
+        """adds the message from the chat text input to the api text file"""
+
+        if message == "":
+            return
+
+        timestamp = datetime.now().strftime("%d. %B %Y %I:%M%p")
+        self.push_message("Human", message, timestamp)
+        ChatAPI.add_input_message(message)
