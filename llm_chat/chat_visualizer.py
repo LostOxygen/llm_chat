@@ -4,7 +4,6 @@ import textwrap
 import os
 from datetime import datetime
 
-from textual.color import Color
 from textual.timer import Timer
 from textual.app import App, ComposeResult
 from textual.binding import Binding
