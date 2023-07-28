@@ -5,17 +5,29 @@ from textual.containers import VerticalScroll
 
 class ChatMessage(Static):
     """widget class to display chat messages"""
-    def __init__(self, message: str, user: str, timestamp: str):
+    def __init__(self, message: str, user: str, user_face: str,
+                 user_color: str, timestamp: str):
         """initialize the chat message widget"""
         super().__init__()
         self.message: str = message
         self.user: str = user
+        self.user_face: str = user_face
+        self.user_color: str = user_color
         self.time: str = timestamp
 
     def compose(self) -> ComposeResult:
         """compose the chat message widget and yield the child widgets"""
-        yield Label(self.user.upper()+" - (" + self.time + "):", id="user_chat_label")
-        yield Label(self.message)
+        # create the widgets
+        user_chat_label = Label(self.user_face + " | " + \
+                                self.user.upper()+" - (" + self.time + "):",
+                                id="user_chat_label")
+
+        # stylize
+        user_chat_label.styles.background = self.user_color
+        user_chat_label.styles.color = "#eceff4"
+
+        yield user_chat_label
+        yield Label("\n"+self.message)
 
 
 class UserLabel(Static):
@@ -25,7 +37,7 @@ class UserLabel(Static):
         self.username: str = username
 
     def compose(self) -> ComposeResult:
-        yield Label(self.username, id="user_label_text")
+        yield Label("\n" + "    " + self.username+"\n", id="user_label_text")
 
 
 class UserColumn(VerticalScroll):

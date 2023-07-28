@@ -1,9 +1,10 @@
 """library for chat visualization functions and classes"""
-from typing import Final, List
+from typing import Final, List, Tuple
 import textwrap
 import os
 from datetime import datetime
 
+from textual.color import Color
 from textual.timer import Timer
 from textual.app import App, ComposeResult
 from textual.binding import Binding
@@ -11,7 +12,7 @@ from textual.widgets import Header, Footer, Input
 from textual.message import Message
 
 from llm_chat.widgets import ChatMessage, UserColumn, ChatColumn, UserLabel
-from llm_chat.utils import COLOR_LIST
+from llm_chat.utils import COLOR_LIST, ASCII_FACES
 from llm_chat.api import ChatAPI
 
 PATH: Final[str] = "/tmp/llm_chat/"
@@ -29,7 +30,7 @@ class ChatVisualizer(App):
         """initialize the chat visualizer class"""
         super().__init__()
         self.chat_msgs: List[ChatMessage] = []
-        self.users: dict[str, str] = {}
+        self.users: dict[str, Tuple(str, str, str)] = {}
         self.curr_chat_len: int = 0
         # check if the paths are valid
         if not os.path.exists(PATH):
@@ -49,7 +50,9 @@ class ChatVisualizer(App):
         """compose the chat visualizer and yield the child widgets"""
         yield Header()
         yield UserColumn(id="user_container")
-        yield ChatColumn(id="chat_container")
+        chat_column = ChatColumn(id="chat_container")
+        #chat_column.styles.scrollbar = "black"
+        yield chat_column
         yield Input(placeholder="Type message.. (Enter to send)", id="input_field")
         yield Footer()
 
@@ -59,9 +62,11 @@ class ChatVisualizer(App):
         # check for users and add them to the user dict with a color
         if user not in self.users:
             if len(self.users) < len(COLOR_LIST):
-                self.users[user] = COLOR_LIST[len(self.users)]
+                self.users[user] = (COLOR_LIST[len(self.users)],
+                                    COLOR_LIST[len(self.users)].darken(0.1),
+                                    ASCII_FACES[len(self.users)])
             else:
-                self.users[user] = "gray"
+                self.users[user] = ("gray", "(⋟﹏⋞)")
             self.push_user(user)
 
         # sanitize the message and wrap it
@@ -72,18 +77,22 @@ class ChatVisualizer(App):
             line = line.lstrip().rstrip()
             print_message += wrapper.fill(text=line)+"\n"
 
-        new_message = ChatMessage(print_message, user, timestamp)
+        msg_color = self.users[user][0]
+        user_color = self.users[user][1]
+        user_face = self.users[user][2]
+        new_message = ChatMessage(print_message, user, user_face, user_color, timestamp)
 
         # add user and timestamp to the border title
         new_message.border_title = f"{user} - ({timestamp}):"
-        new_message.styles.background = self.users[user]
+        new_message.styles.background = msg_color
+
         self.query_one("#chat_container").mount(new_message)
 
 
     def push_user(self, user: str) -> None:
         """adds a UserLabel widget to the user list"""
         user_label = UserLabel(user)
-        user_label.styles.background = self.users[user]
+        user_label.styles.background = self.users[user][0]
 
         self.query_one("#user_container").mount(user_label)
 
