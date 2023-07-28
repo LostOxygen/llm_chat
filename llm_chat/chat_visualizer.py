@@ -3,6 +3,7 @@ from typing import Final, List, Tuple
 import textwrap
 import os
 from datetime import datetime
+from time import sleep
 
 from textual.timer import Timer
 from textual.app import App, ComposeResult
@@ -98,7 +99,7 @@ class ChatVisualizer(App):
 
     async def on_mount(self) -> None:
         """on button event handler"""
-        self.data_timer = self.set_interval(1, self.load_msgs, repeat=0)
+        self.data_timer = self.set_interval(1.5, self.load_msgs, repeat=0)
 
 
     def load_msgs(self) -> None:
@@ -112,13 +113,10 @@ class ChatVisualizer(App):
                 if len(chat) == 0:
                     return
 
-                curr_line_counter: int = 0
-                for line in chat.split("@"):
-                    curr_line_counter += 1
-                    if self.curr_chat_len < curr_line_counter and line != "":
-                        self.curr_chat_len += 1
-                        msg = line.split("|")
-                        self.push_message(msg[1], msg[2], msg[3])
+                first_msg = ChatAPI.get_first_message(file_name="chat_log.txt",  split_char="@")
+                msg = first_msg.split("|")
+                self.push_message(msg[1], msg[2], msg[3])
+
             except EOFError:
                 return
 
