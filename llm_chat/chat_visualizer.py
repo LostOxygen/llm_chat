@@ -3,7 +3,6 @@ from typing import Final, List, Tuple
 import textwrap
 import os
 from datetime import datetime
-from time import sleep
 
 from textual.timer import Timer
 from textual.app import App, ComposeResult
