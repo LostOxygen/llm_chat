@@ -29,6 +29,17 @@ Input>.input--cursor {
     text-style: reverse;
 }
 
+Widget {
+    scrollbar-background: #3b4252;
+    scrollbar-background-hover: #3b4252;
+    scrollbar-background-active: #3b4252;
+    
+    scrollbar-color: #eceff4;
+    scrollbar-color-active: #d8dee9;
+    scrollbar-color-hover: #eceff4;
+    scrollbar-corner-color: #eceff4;
+}
+
 Screen {
     layout: grid;
     grid-size: 2;
