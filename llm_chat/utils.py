@@ -13,7 +13,7 @@ COLOR_LIST: Final[List[str]] = [Color.parse("#5e81ac"),
 
 ASCII_FACES: Final[List[str]] = ["(⌒▽⌒)",
                                  "(っ◕‿◕)っ",
-                                 "( ͡° ͜ʖ ͡°)",
+                                 "⎦˚◡˚⎣",
                                  "(ಠ_ಠ)",
                                  "ˁ(OᴥO)ˀ",
                                  "(^_^\")",
