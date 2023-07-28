@@ -128,5 +128,5 @@ class ChatVisualizer(App):
             return
 
         timestamp = datetime.now().strftime("%d. %B %Y %I:%M%p")
-        self.push_message("Human", message, timestamp)
+        self.push_message("human", message, timestamp)
         ChatAPI.add_input_message(message)
