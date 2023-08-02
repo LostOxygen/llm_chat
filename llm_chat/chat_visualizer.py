@@ -49,9 +49,7 @@ class ChatVisualizer(App):
         """compose the chat visualizer and yield the child widgets"""
         yield Header()
         yield UserColumn(id="user_container")
-        chat_column = ChatColumn(id="chat_container")
-        #chat_column.styles.scrollbar = "black"
-        yield chat_column
+        yield ChatColumn(id="chat_container")
         yield Input(placeholder="Type message.. (Enter to send)", id="input_field")
         yield Footer()
 
